@@ -1,0 +1,8 @@
+#main{
+  width: 400px;
+  height:400px;
+  background: white;
+  border: 2px solid gray;
+  margin: 0 auto;
+  overflow: hidden;
+}

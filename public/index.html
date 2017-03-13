@@ -1,9 +1,10 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="stylesheet" href="/css/index.css">
     <!--
       Notice the use of %PUBLIC_URL% in the tag above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -13,19 +14,137 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>别踩白块</title>
   </head>
   <body>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <h2>score</h2>
+    <h2 id="score">0</h2>
+    <div id="main">
+        <div id="con"></div>
+    </div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <script type="text/javascript">
+       var speed = 4;
+       var clock = null;
+      //通过ID查找元素
+      function $(id){
+        return document.getElementById(id);
+      }
+      //创建div
+      function creatediv(className){
+        var div = document.createElement('div');
+        div.className = className;
+        return div;
+      }
 
-      To begin the development, run `npm start`.
-      To create a production bundle, use `npm run build`.
-    -->
+      function createcell(){
+        var temp = ['cell','cell','cell','cell'];
+        var index = Math.floor(Math.random()*4);
+        temp[index]="cell black";
+        return temp;
+      }
+      //创建一行
+      function createrow(){
+        var con =$('con');
+
+        var row= creatediv('row');
+
+        var arr = createcell();
+
+        for(var i = 0;i<4;i++){
+          row.appendChild(creatediv(arr[i]));
+        }
+
+        if(con.firstChild == null){
+          con.appendChild(row);
+        }else{
+          con.insertBefore(row,con.firstChild);
+        }
+
+      }
+
+      function init(){
+        for(var i = 0;i<4;i++){
+          createrow();
+        }
+
+        $('main').onclick = function(ev){
+          judge(ev);
+        }
+
+        clock =window.setInterval("move()",50);
+      }
+      //增加分数
+      function score(){
+        var newscore = parseInt($('score').innerHTML)+1;
+        $('score').innerHTML= newscore;
+        if(speed%10 ==0){
+          speedup();
+        }
+      }
+
+
+      //判断点击是否正确
+      function judge(ev){
+        if(ev.target.className.indexOf("black")==-1){
+          pass;
+        }else{
+          ev.target.className='cell';
+          ev.target.parentNode.pass = 1;
+          score();
+        }
+      }
+
+
+      // 游戏结束
+       function fail(){
+           clearInterval(clock);
+           confirm('your score is ' + parseInt($('score').innerHTML) );
+       }
+
+       //速度加快
+      function speedup(){
+        speed+=2;
+        if(speed ==20){
+          alert("amazing");
+        }
+      }
+
+      //让黑块动起来
+        function move(){
+            var con = $('con');
+            var top = parseInt(window.getComputedStyle(con, null)['top']);
+
+            if(speed + top > 0){
+                top = 0;
+            }else{
+                top += speed;
+            }
+            con.style.top = top + 'px';
+
+            if(top == 0){
+                createrow();
+                con.style.top = '-100px';
+                delrow();
+            }else if(top == (-100 + speed)){
+                var rows = con.childNodes;
+                if((rows.length == 5) && (rows[rows.length-1].pass !== 1) ){
+                    fail();
+                }
+            }
+        }
+
+        //删除行
+        function delrow(){
+           var con = $('con');
+           if(con.childNodes.length == 6) {
+                  con.removeChild(con.lastChild);
+              }
+       }
+
+      init();
+
+
+    </script>
   </body>
 </html>

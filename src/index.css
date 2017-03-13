@@ -1,5 +1,32 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+#main{
+  width: 400px;
+  height:400px;
+  background: white;
+  border: 2px solid gray;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+#con{
+  /*往上提了一行*/
+  width: 100%;
+  height:400px;
+  position: relative;
+  top: -100px;
+  border-collapse:collapse;
+}
+
+.row{
+  height:100px;
+  width: 100%;
+}
+
+.cell{
+  height: 100px;
+  width:100px;
+  float:left;
+}
+
+.black{
+  background: black;
 }
